@@ -22,7 +22,7 @@ while (scoreAttackers < 13 && scoreDefenders < 13) {
         if (Math.random() < probability) {
             const randomIndex = Math.floor(Math.random() * defenders.length);
             const eliminatedPlayer = defenders.splice(randomIndex, 1)[0];
-            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort !`);
+            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort`);
             
             if (Math.random() < 0.6 && !spikePlanted) {
                 spikePlanted = true;
@@ -31,7 +31,7 @@ while (scoreAttackers < 13 && scoreDefenders < 13) {
         } else {
             const randomIndex = Math.floor(Math.random() * attackers.length);
             const eliminatedPlayer = attackers.splice(randomIndex, 1)[0];
-            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort !`);
+            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort`);
             
             if (Math.random() < 0.4 && !spikePlanted) {
                 spikePlanted = true;
