@@ -1,82 +1,64 @@
-class Player {
-    constructor(name, role) {
-        this.name = name;
-        this.role = role;
+const players = ["Omen", "Jett", "Phoenix", "Breach", "Sage"];
+
+let roundNumber = 1;
+let scoreAttackers = 0;
+let scoreDefenders = 0;
+
+while (scoreAttackers < 13 && scoreDefenders < 13) {
+    console.log(`\nRound ${roundNumber}`);
+
+    const attackers = [];
+    const defenders = [];
+
+    for (let i = 0; i < players.length; i++) {
+        attackers.push({ name: players[i], side: "Attaquant" });
+        defenders.push({ name: players[i], side: "Defenseur" });
     }
 
-    takeAction() {
-        console.log(`${this.name} (${this.role}) prend une action.`);
-        return Math.random() < 0.5; // 50% de chance de réussite pour une action générique
-    }
-}
+    let spikePlanted = false;
+    let probability = 0.5;
 
-class Game {
-    constructor() {
-        this.attackers = [
-            new Player("Omen", "smoker"),
-            new Player("Fade", ""),
-            new Player("Phoenix", "flasher"),
-            new Player("Chamber", ""),
-            new Player("Jett", "killer")
-        ];
-
-        this.defenders = [
-            new Player("Omen", "smoker"),
-            new Player("Fade", ""),
-            new Player("Phoenix", "flasher"),
-            new Player("Chamber", ""),
-            new Player("Jett", "killer")
-        ];
-
-        this.roundsPlayed = 0;
-        this.attackersWonRounds = 0;
-        this.defendersWonRounds = 0;
-    }
-
-    startRound() {
-        console.log(`\n--- Round ${this.roundsPlayed + 1} ---`);
-
-        // Sélection aléatoire d'un joueur de chaque équipe
-        const attacker = this.attackers[Math.floor(Math.random() * this.attackers.length)];
-        const defender = this.defenders[Math.floor(Math.random() * this.defenders.length)];
-
-        // Action du joueur attaquant
-        const isAttackSuccessful = attacker.takeAction();
-
-        if (isAttackSuccessful) {
-            console.log(`${attacker.name} a réussi son action.`);
-            // Si le joueur attaquant a réussi, il a une chance de 70% de gagner un duel
-            const duelOutcome = Math.random() < 0.7 ? "attaquants" : "défenseurs";
-            console.log(`${duelOutcome} remportent le duel.`);
-            // Si les attaquants remportent le duel, ils ont une chance de 60% d'amorcer le spike
-            if (duelOutcome === "attaquants" && Math.random() < 0.6) {
-                console.log("Les attaquants amorcent le spike.");
-                this.attackersWonRounds++;
+    while (attackers.length > 0 && defenders.length > 0) {
+        if (Math.random() < probability) {
+            const randomIndex = Math.floor(Math.random() * defenders.length);
+            const eliminatedPlayer = defenders.splice(randomIndex, 1)[0];
+            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort !`);
+            
+            if (Math.random() < 0.6 && !spikePlanted) {
+                spikePlanted = true;
+                console.log("Le Spike est planté");
             }
         } else {
-            console.log(`${attacker.name} a échoué dans son action.`);
-            // Si le joueur attaquant échoue, il y a une chance de 40% que les défenseurs amorcent le spike
-            if (Math.random() < 0.4) {
-                console.log("Les défenseurs amorcent le spike.");
-                this.defendersWonRounds++;
+            const randomIndex = Math.floor(Math.random() * attackers.length);
+            const eliminatedPlayer = attackers.splice(randomIndex, 1)[0];
+            console.log(`${eliminatedPlayer.side} ${eliminatedPlayer.name} est mort !`);
+            
+            if (Math.random() < 0.4 && !spikePlanted) {
+                spikePlanted = true;
+                console.log("Le Spike est planté");
             }
         }
 
-        // Vérification de la fin de la manche
-        if (this.attackersWonRounds === 13 || this.defendersWonRounds === 13) {
-            console.log(`La partie est terminée. ${this.attackersWonRounds === 13 ? 'Attaquants' : 'Défenseurs'} remportent la partie.`);
-        } else {
-            this.roundsPlayed++;
+        if (spikePlanted) {
+            probability = 0.7;
+        }
+
+        if (attackers.length <= 0) {
+            console.log("Les défenseurs ont gagné la manche");
+            scoreDefenders += 1;
+        } else if (defenders.length <= 0) {
+            console.log("Les attaquants ont gagné la manche");
+            scoreAttackers += 1;
         }
     }
 
-    play() {
-        while (this.attackersWonRounds < 13 && this.defendersWonRounds < 13) {
-            this.startRound();
-        }
+    console.log(`Score:`);
+    console.log(`Attaquants ${scoreAttackers}/ Défenseurs ${scoreDefenders}`);
+
+    if (scoreAttackers >= 13) {
+        console.log("Les attaquants ont gagné la partie");
+    } else if (scoreDefenders >= 13) {
+        console.log("Les défenseurs ont gagné la partie");
     }
+    roundNumber++;
 }
-
-// Création d'une instance du jeu et démarrage
-const game = new Game();
-game.play();
